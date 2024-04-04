@@ -1,0 +1,26 @@
+import { config } from 'dotenv';
+config();
+
+const getOrReturnDefaultNumber = (value: unknown, def: number): number => (Number.isFinite(+value) ? +value : def);
+
+export const ENV = {
+  ENVIRONMENT: process.env.ENVIRONMENT || 'development',
+  DB: {
+    MONGODB: { URL: process.env.MONGODB_URL || '0.0.0.0:27017', DATABASE_NAME: process.env.MONGODB_DATABASE_NAME },
+    REDIS: {
+      URL: process.env.REDIS_URL || '',
+      PASSWORD: process.env.REDIS_PASSWORD || '',
+    },
+  },
+  BOT: {
+    TOKEN: process.env.BOT_TOKEN || '',
+    CHAT_ID: getOrReturnDefaultNumber(process.env.BOT_CHAT_ID, -1001584063920),
+  },
+  BASE_URL: process.env.BASE_URL || '',
+  HTTP_HOST: process.env.HTTP_HOST || '0.0.0.0',
+  HTTP_PORT: getOrReturnDefaultNumber(process.env.HTTP_PORT, 4000),
+  JWT_SECRET_ACCESS: process.env.JWT_SECRET_ACCESS || 'JWT_SECRET_ACCESS',
+  JWT_SECRET_REFRESH: process.env.JWT_SECRET_REFRESH || 'JWT_SECRET_REFRESH',
+  JWT_EXPIRE_ACCESS: process.env.JWT_EXPIRE_ACCESS || '15M',
+  JWT_EXPIRE_REFRESH: process.env.JWT_EXPIRE_REFRESH || '1W',
+};

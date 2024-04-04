@@ -1,0 +1,46 @@
+# image: node:16
+
+stages:
+  - deploy-kc
+  - deploy-dev
+
+deploy-kc:
+  before_script:
+    - apt-get update -qq
+    - apt-get install -qq git
+    # Setup SSH deploy keys
+    - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    
+  stage: deploy-kc
+  environment: production-kc
+  only:
+    - kc
+  script:
+    - echo "Deploying application..."
+    - ssh root@116.203.59.2 "cd apps/saller-sytem/ && git pull && make build-kc && echo \"yes\" | docker system prune --all && exit"
+    - echo "Application successfully deployed."
+
+deploy-dev:
+  before_script:
+    - apt-get update -qq
+    - apt-get install -qq git
+    # Setup SSH deploy keys
+    - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    
+  stage: deploy-dev
+  environment: development
+  only:
+    - main
+  script:
+    - echo "Deploying application..."
+    - ssh root@49.13.1.65 "cd apps/saller-sytem/ && git pull && make build-prod && echo \"yes\" | docker system prune --all && exit"
+    - echo "Application successfully deployed."
+ 

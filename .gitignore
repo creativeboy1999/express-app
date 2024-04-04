@@ -1,0 +1,11 @@
+node_modules
+
+public
+*.env*
+*.pem
+dist
+data
+typings
+.vscode
+
+.DS_Store

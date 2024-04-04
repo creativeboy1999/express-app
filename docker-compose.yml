@@ -1,0 +1,69 @@
+version: "3.8"
+
+services:
+  mongo:
+    container_name: Mongo
+    image: mongo
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
+    ports:
+    - '27018:27017'
+    volumes:
+      - ${DOCKER_MOUNT_DATA_DIR}/db/mongod/:/root/mongo/db
+      - ${DOCKER_MOUNT_DATA_DIR}/db/mongod/mongod.conf:/etc/mongod.conf
+    networks:
+      - mohirdev
+  redis:
+    container_name: ${REDIS_CONTAINER_NAME}
+    command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes --replica-read-only no
+    image: redis:alpine
+    restart: always
+    environment:
+      # - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports:
+    - '${REDIS_PORT}:6379'
+    volumes:
+      - "$DOCKER_MOUNT_DATA_DIR/redis/data:/data"
+      - "$DOCKER_MOUNT_DATA_DIR/redis/config:/usr/local/etc/redis/redis.conf"
+    networks:
+      - mohirdev
+  backend:
+    container_name: ${BACKEND_CONTAINER_NAME}
+    build:
+      context: .
+      dockerfile: dockerFile
+    restart: always
+    depends_on:
+      - mongo
+      - redis
+    ports:
+      - "${HTTP_PORT}:${HTTP_PORT}"
+    volumes:
+      - "$DOCKER_MOUNT_DATA_DIR/backend:/usr/app/"
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - HTTP_HOST=${HTTP_HOST}
+      - HTTP_PORT=${HTTP_PORT}
+      - BASE_URL=${BASE_URL}
+      - JWT_SECRET_ACCESS=${JWT_SECRET_ACCESS}
+      - JWT_SECRET_REFRESH=${JWT_SECRET_REFRESH}
+      - JWT_EXPIRE_ACCESS=${JWT_EXPIRE_ACCESS}
+      - JWT_EXPIRE_REFRESH=${JWT_EXPIRE_REFRESH}
+      - BOT_TOKEN=${BOT_TOKEN}
+      - BOT_CHAT_ID=${BOT_CHAT_ID}
+      - MONGODB_URL=${MONGODB_URL}
+      - MONGODB_DATABASE_NAME=${MONGODB_DATABASE_NAME}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_URL= redis://default:redis_pass@redis:6379
+    networks:
+      - mohirdev
+
+networks:
+  mohirdev:
