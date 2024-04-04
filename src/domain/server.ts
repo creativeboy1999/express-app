@@ -14,6 +14,7 @@ const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minutes
   limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  validate: { xForwardedForHeader: false },
 });
 
 // Apply the rate limiting middleware to all requests.

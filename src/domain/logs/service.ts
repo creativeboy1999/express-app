@@ -69,7 +69,6 @@ export class LogsService {
       res.json = (data) => {
         logData.responseBody = data;
         logData.responseOn = new Date().toISOString();
-        console.log(logData);
 
         self.create(logData).catch();
 
