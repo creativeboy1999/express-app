@@ -26,8 +26,7 @@ const router = Router()
    *         content:
    *           application/json:
    *             schema:
-   *               type: Object
-   *                 $ref: '#/components/schemas/Login'
+   *               $ref: '#/components/schemas/Login'
    */
   .post('/login', authController.login)
   /**
@@ -48,8 +47,7 @@ const router = Router()
    *         content:
    *           application/json:
    *             schema:
-   *               type: Object
-   *                 $ref: '#/components/schemas/Register'
+   *               $ref: '#/components/schemas/Register'
    */
   .post('/register', authController.register)
   /**
