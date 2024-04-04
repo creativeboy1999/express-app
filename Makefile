@@ -16,11 +16,6 @@ build-prod:
 	git pull origin main && \
 	docker compose --env-file .env.prod --project-name mohirdev -f "docker-compose.yml" up -d --build 
 
-build-kc:
-	git checkout kc && \
-	git pull origin kc && \
-	docker compose --env-file .env.prod --project-name mohirdev -f "docker-compose.yml" up -d --build 
-
 down-prod:
 	docker compose --env-file .env.prod --project-name mohirdev -f "docker-compose.yml" down
 
