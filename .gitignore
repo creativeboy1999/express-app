@@ -5,7 +5,7 @@ public
 *.pem
 dist
 data
-typings
+./typings
 .vscode
 
 .DS_Store

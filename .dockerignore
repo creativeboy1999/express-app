@@ -2,7 +2,7 @@
 
 data
 dist
-typings
+./typings
 
 node_modules
 public

@@ -6,6 +6,9 @@
 docker compose --env-file .env.prod --project-name mohir-dev -f "docker-compose.yml" up -d --build
 ```
 
+# Baseurl
+``` https://mohirdev.umarakbarov.uz/api```
+
 # Pre-requisites
 - Install [Node.js](https://nodejs.org/en/) version 16.20.2
 - Install [Docker](https://docs.docker.com/engine/install/) version 20.10.23, build 7155243
